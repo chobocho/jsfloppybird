@@ -11,6 +11,10 @@ class GameEngine extends Observer {
   }
 
   increaseTick() {
+    if (!this.game.isPlayState()) {
+      return;
+    }
+
     this.game.increaseTick();
     let addition_score = 10 + getRandomInt(0, 8);
     this.game.increaseScore(addition_score);
@@ -43,10 +47,10 @@ class GameEngine extends Observer {
   }
 
   pause() {
-
+    this.game.pause();
   }
 
   start() {
-
+    this.game.start();
   }
 }

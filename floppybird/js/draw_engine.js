@@ -71,7 +71,13 @@ class DrawEngine extends Observer {
   }
 
   _drawButton() {
+    if (this.game.isIdleState()) {
 
+    } else if (this.game.isPauseState()) {
+
+    } else if (this.game.isPlayState()) {
+      // Do nothing
+    }
   }
 
   _drawBird() {

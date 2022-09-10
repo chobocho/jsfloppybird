@@ -176,12 +176,17 @@ class FloppyBird {
 
   start() {
     console.log("Start");
-    //this.setState(this.playState);
+    if (this._state == this.PAUSE_STATE || this._state == this.IDLE_STATE || this.state == this.GAME_OVER_STATE) {
+      this._state = this.PLAY_STATE;
+    }
   }
 
   pause() {
+    if (this._state != this.PLAY_STATE) {
+      return;
+    }
     console.log("Pause");
-    //this.setState(this.pauseState);
+    this._state = this.PAUSE_STATE;
   }
 
   setState(newState) {
