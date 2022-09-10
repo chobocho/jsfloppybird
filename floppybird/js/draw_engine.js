@@ -12,7 +12,7 @@ class DrawEngine extends Observer {
   }
 
   _LoadImage() {
-    let root = "img";
+    let root = "./img";
 
     this.background = [];
     this.background[0] = LoadImage(root + "/background01.jpg");
