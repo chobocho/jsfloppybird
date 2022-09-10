@@ -19,6 +19,7 @@ class GameEngine extends Observer {
     let acceleration = score > this._reference_score ? (score - this._reference_score) / 10000 : 0;
     this.moveRight(acceleration);
     this.moveDown(acceleration);
+    this.game.checkGetCoin();
   }
 
   moveUp() {

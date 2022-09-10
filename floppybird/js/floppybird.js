@@ -76,6 +76,10 @@ class Pillar {
   coin() {
     return this._coins;
   }
+
+  removeFirstCoin() {
+    this._coins[0][0] = -1;
+  }
 }
 
 class Energy {
@@ -108,6 +112,8 @@ class FloppyBird {
     this.PLAY_STATE = 1;
     this.PAUSE_STATE = 2;
     this.GAME_OVER_STATE = 3;
+
+    this.core_rect = [18, 14, 48, 32];
 
     this.JUMP = 60;
     this.GRAVITY = 3;
@@ -157,6 +163,11 @@ class FloppyBird {
   moveUp(acceleration) {
     this._y -= (this.JUMP + acceleration);
     this._y = this._y > 0 ? this._y : 0;
+    this._space_click_count++;
+    if (this._space_click_count > 2) {
+      this._energy.decrease(1);
+      this._space_click_count = 0;
+    }
   }
 
   moveRight(acceleration) {
@@ -241,11 +252,46 @@ class FloppyBird {
     return this._state == this.GAME_OVER_STATE;
   }
 
+  energy() {
+    return this._energy.energy();
+  }
+
   pillar() {
     return this._pillar.pillar();
   }
 
   coin() {
     return this._pillar.coin();
+  }
+
+  upCollision(x1, x2, y) {
+    if (this._x + this.core_rect[2] < x1)
+        return false;
+    if (this._x + this.core_rect[0] > x2)
+        return false;
+    if (this._y + this.core_rect[1] > y)
+        return false;
+    return true;
+  }
+
+  downCollision(x1, x2, y) {
+    if (this._x + this.core_rect[2] < x1)
+      return false;
+    if (this._x + this.core_rect[0] > x2)
+      return false;
+    if (this._y + this.core_rect[3] < y)
+      return false;
+    return true;
+  }
+
+  checkGetCoin() {
+     let coins = this.coin();
+     if (this.upCollision(coins[0][0], coins[0][0] + 60, coins[0][1])
+       || this.downCollision(coins[0][0], coins[0][0] + 60, coins[0][1] + 60)) {
+       this._pillar.removeFirstCoin();
+       this._score.increase(2022);
+       this._energy.increase(48);
+       printf("[Floppybird] ", "Get Coins");
+     }
   }
 }

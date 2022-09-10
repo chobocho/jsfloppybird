@@ -58,6 +58,7 @@ class DrawEngine extends Observer {
     bufCtx.beginPath();
     this._drawBoard();
     this._drawPillar();
+    this._drawEnergy();
     this._drawScore();
     this._drawBird();
     this._drawButton();
@@ -104,9 +105,34 @@ class DrawEngine extends Observer {
     }
   }
 
+  _drawEnergy() {
+    // printf("[DrawEngine] _drawScore()", this.game.score());
+    let code = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    let energy = this.game.energy();
+    let pos = 3;
+    let blockSize = 30;
+    let startX = 500-blockSize*0.6*pos;
+    let startY = 10;
+
+    // printf("[DrawEngine] _drawScore()", startX + ", " + startY);
+
+    if (energy < 80) {
+      bufCtx.fillStyle = '#FF000055';
+      bufCtx.fillRect(startX, startY, 120, blockSize);
+    }
+
+    bufCtx.drawImage(this.buttonImage[code[energy%10]], startX + blockSize * 0.6 * pos, startY, blockSize * 0.6, blockSize);
+    while (energy > 0) {
+      bufCtx.drawImage(this.buttonImage[code[energy%10]], startX + blockSize * 0.6 * pos, startY, blockSize * 0.6, blockSize);
+      energy = Math.floor(energy / 10);
+      pos--;
+    }
+  }
+
+
   _drawScore() {
     // printf("[DrawEngine] _drawScore()", this.game.score());
-    let code = new Array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+    let code = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     let score = this.game.score();
     let pos = 7;
     let blockSize = 30;
