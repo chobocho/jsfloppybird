@@ -117,7 +117,7 @@ class FloppyBird {
 
     this.JUMP = 60;
     this.GRAVITY = 3;
-    this._bottom = 560;
+    this._bottom = 600;
 
     this._startX = startX;
     this._startY = startY;
@@ -305,6 +305,12 @@ class FloppyBird {
       return false;
     }
     if (this._energy.energy() == 0) {
+      this._state = this.GAME_OVER_STATE;
+      return false;
+    }
+
+    printf("[FloppyBird] isAlive()", this._x + ", " + this._y + this.core_rect[3]);
+    if (this._y + this.core_rect[3] > this._bottom) {
       this._state = this.GAME_OVER_STATE;
       return false;
     }
