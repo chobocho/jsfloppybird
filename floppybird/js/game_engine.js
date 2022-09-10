@@ -24,12 +24,19 @@ class GameEngine extends Observer {
     this.moveRight(acceleration);
     this.moveDown(acceleration);
     this.game.checkGetCoin();
+    this.game.isAlive();
+
+    if (this.game.isGameOverState()) {
+       if (this.game.needToSaveScore()) {
+          printf("[GameEngine]", "SaveScore");
+       }
+    }
   }
 
   moveUp() {
     printf("[GameEngine] moveUp()", "");
     if (!this.game.isPlayState()) {
-      //return;
+      return;
     }
     let score = this._start_score + this.game.score();
     let acceleration = score > this._reference_score ? (score - this._reference_score) / 5000 : 0;

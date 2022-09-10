@@ -22,9 +22,6 @@ class DrawEngine extends Observer {
     this.background[4] = LoadImage(root + "/background05.png");
     this.background[5] = LoadImage(root + "/background06.png");
 
-    this.play_image = LoadImage(root + "/start.png");
-    this.pause_image = LoadImage(root + "/pause.png");
-
     this.buttonImage = {};
     this.buttonImage['score'] = LoadImage(root + "/score.png");
     this.buttonImage['0'] = LoadImage(root + "/sn00.png");
@@ -41,6 +38,8 @@ class DrawEngine extends Observer {
     this.buttonImage['tile_down'] = LoadImage(root + "/tile02.png");
     this.buttonImage['tile_body'] = LoadImage(root + "/tile03.png");
     this.buttonImage['coin'] = LoadImage(root + "/coin.png");
+    this.buttonImage['start'] = LoadImage(root + "/start.png");
+    this.buttonImage['resume'] = LoadImage(root + "/resume.png");
 
     this.birdImage = [];
     this.birdImage[0] = LoadImage(root + "/bird01.png");
@@ -71,11 +70,17 @@ class DrawEngine extends Observer {
   }
 
   _drawButton() {
+    // printf("[DrawEngine] _drawButton() ", this.game.state());
     if (this.game.isIdleState()) {
-
+      bufCtx.drawImage(this.buttonImage['start'], 250, 100, 300, 163);
+      this._drawHighScore();
     } else if (this.game.isPauseState()) {
-
-    } else if (this.game.isPlayState()) {
+      bufCtx.drawImage(this.buttonImage['resume'], 300, 100, 200, 100);
+      this._drawHighScore();
+    }  else if (this.game.isGameOverState()) {
+      bufCtx.drawImage(this.buttonImage['start'], 250, 100, 300, 163);
+      this._drawHighScore();
+    }  else if (this.game.isPlayState()) {
       // Do nothing
     }
   }
@@ -152,6 +157,26 @@ class DrawEngine extends Observer {
     while (score > 0) {
       bufCtx.drawImage(this.buttonImage[code[score%10]], startX + blockSize * 0.6 * pos, startY, blockSize * 0.6, blockSize);
       score = Math.floor(score / 10);
+      pos--;
+    }
+  }
+
+  _drawHighScore() {
+    // printf("[DrawEngine] _drawHighScore()", this.game.highScore());
+    let code = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    let highScore = this.game.highScore();
+    let pos = 8;
+    let blockSize = 60;
+    let startX = (780-blockSize*pos)/2;
+    let startY = 300;
+
+    bufCtx.fillStyle = '#FFFF0022';
+    bufCtx.fillRect(startX, startY, blockSize*pos, blockSize);
+    pos--;
+    bufCtx.drawImage(this.buttonImage[code[highScore%10]], startX + blockSize * pos, startY, blockSize, blockSize);
+    while (highScore > 0) {
+      bufCtx.drawImage(this.buttonImage[code[highScore%10]], startX + blockSize * pos, startY, blockSize, blockSize);
+      highScore = Math.floor(highScore / 10);
       pos--;
     }
   }

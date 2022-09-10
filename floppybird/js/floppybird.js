@@ -107,7 +107,7 @@ class Energy {
 }
 
 class FloppyBird {
-  constructor(startX, startY, highScore=0) {
+  constructor(startX, startY, highscore=0) {
     this.IDLE_STATE = 0;
     this.PLAY_STATE = 1;
     this.PAUSE_STATE = 2;
@@ -126,7 +126,7 @@ class FloppyBird {
     this._level = 1;
     this._tick = 0;
     this._space_click_count = 0;
-    this._score = new Score(highScore);
+    this._score = new Score(highscore);
     this._energy = new Energy();
     this._pillar = new Pillar();
     this._state = this.IDLE_STATE;
@@ -141,6 +141,7 @@ class FloppyBird {
     this._y = this._startY;
     this._score.init();
     this._pillar.init();
+    this._energy.init();
     this._state = this.IDLE_STATE;
   }
 
@@ -156,11 +157,17 @@ class FloppyBird {
   }
 
   moveDown(acceleration) {
+    if (this._state != this.PLAY_STATE) {
+      return;
+    }
     this._y += this.GRAVITY + acceleration;
     this._y = this._y < this._bottom ? this._y : this._bottom;
   }
 
   moveUp(acceleration) {
+    if (this._state != this.PLAY_STATE) {
+      return;
+    }
     this._y -= (this.JUMP + acceleration);
     this._y = this._y > 0 ? this._y : 0;
     this._space_click_count++;
@@ -171,12 +178,22 @@ class FloppyBird {
   }
 
   moveRight(acceleration) {
+    if (this._state != this.PLAY_STATE) {
+      return;
+    }
     this._pillar.move(acceleration);
   }
 
   start() {
-    console.log("Start");
-    if (this._state == this.PAUSE_STATE || this._state == this.IDLE_STATE || this.state == this.GAME_OVER_STATE) {
+    console.log("[FloppyBird] Start()" + this._state);
+    if (this._state == this.PLAY_STATE) {
+      return;
+    }
+
+    if (this._state == this.PAUSE_STATE || this._state == this.IDLE_STATE) {
+      this._state = this.PLAY_STATE;
+    } else if (this._state == this.GAME_OVER_STATE) {
+      this.init();
       this._state = this.PLAY_STATE;
     }
   }
@@ -187,11 +204,6 @@ class FloppyBird {
     }
     console.log("Pause");
     this._state = this.PAUSE_STATE;
-  }
-
-  setState(newState) {
-    //this.state = newState;
-    this.notify();
   }
 
   score() {
@@ -207,7 +219,6 @@ class FloppyBird {
   highScore() {
     return this._score.highScore();
   }
-
 
   level() {
     return this._level;
@@ -289,14 +300,38 @@ class FloppyBird {
     return true;
   }
 
+  isAlive() {
+    if (this._state != this.PLAY_STATE) {
+      return false;
+    }
+    if (this._energy.energy() == 0) {
+      this._state = this.GAME_OVER_STATE;
+      return false;
+    }
+
+    let p = this._pillar.pillar();
+    for (let i = 0; i < p.length; i++) {
+      if (this.upCollision(p[i][0], p[i][0] + 60, p[i][1] * 60 + 60)
+        || this.downCollision(p[i][0], p[i][0] + 60, 540 - p[i][2] * 60)) {
+        this._state = this.GAME_OVER_STATE;
+        return false;
+      }
+    }
+    return true;
+  }
+
   checkGetCoin() {
      let coins = this.coin();
-     if (this.upCollision(coins[0][0], coins[0][0] + 60, coins[0][1])
-       || this.downCollision(coins[0][0], coins[0][0] + 60, coins[0][1] + 60)) {
+     if (this.upCollision(coins[0][0], coins[0][0] + 60, coins[0][1] * 60)
+       || this.downCollision(coins[0][0], coins[0][0] + 60, coins[0][1] * 60 + 60)) {
        this._pillar.removeFirstCoin();
        this._score.increase(2022);
        this._energy.increase(48);
        printf("[Floppybird] ", "Get Coins");
      }
+  }
+
+  needToSaveScore() {
+    return this._score.needToSave();
   }
 }

@@ -6,7 +6,6 @@ class Score {
   }
 
   init() {
-    this._score = 0;
     this._highScore = this._highScore > this._score ? this._highScore : this._score;
     this._score = 1;
   }
@@ -16,7 +15,7 @@ class Score {
   }
 
   highScore() {
-    return this._highscore;
+    return this._highScore;
   }
 
   setHighScore(score) {
@@ -29,6 +28,10 @@ class Score {
   }
 
   _updateHighScore() {
-    this._highscore = this._highscore > this._score ? this._highscore : this._score;
+    this._highScore = this._highScore > this._score ? this._highScore : this._score;
+  }
+
+  needToSave() {
+    return this._prev_high_score < this._highScore;
   }
 }
