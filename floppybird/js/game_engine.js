@@ -1,7 +1,8 @@
 class GameEngine extends Observer {
-  constructor(game) {
+  constructor(game, db) {
     super();
     this.game = game;
+    this.scoreDB = db;
     this._reference_score = 20000;
     this._start_score = 19000;
   }
@@ -29,6 +30,7 @@ class GameEngine extends Observer {
     if (this.game.isGameOverState()) {
        if (this.game.needToSaveScore()) {
           printf("[GameEngine]", "SaveScore");
+          this.scoreDB.setScore(this.game.highScore());
        }
     }
   }
@@ -55,6 +57,12 @@ class GameEngine extends Observer {
 
   pause() {
     this.game.pause();
+    if (this.game.isPauseState()) {
+      if (this.game.needToSaveScore()) {
+        printf("[GameEngine]", "SaveScore");
+        this.scoreDB.setScore(this.game.highScore());
+      }
+    }
   }
 
   start() {

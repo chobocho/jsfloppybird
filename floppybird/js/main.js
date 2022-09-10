@@ -26,9 +26,10 @@ function KeyPressEvent(e) {
 }
 
 function InitValue() {
-  floppybird = new FloppyBird(100, 200);
+  scoreDB = new LocalDB();
+  floppybird = new FloppyBird(100, 200, scoreDB.getScore());
   floppybird.init();
-  gameEngine = new GameEngine(floppybird);
+  gameEngine = new GameEngine(floppybird, scoreDB);
   drawEngine = new DrawEngine(floppybird);
 
   window.onkeydown = KeyPressEvent;
@@ -55,7 +56,6 @@ function InitCanvas() {
 
 const onLoadPage = function onLoadPageFnc() {
   InitCanvas();
-  //DecisionBlockSize();
   InitValue();
   setInterval(OnDraw, 33);
   //setTimeout(function () { OnDraw() }, 300);
