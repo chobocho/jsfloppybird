@@ -52,7 +52,7 @@ class DrawEngine extends Observer {
   }
 
   OnDraw() {
-    let image = [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5, 5, 5, 5];
+    let image = [0, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5];
     if (this.game.level() > image.length) {
       this.background_image = 5;
     } else {

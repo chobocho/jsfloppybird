@@ -1,7 +1,7 @@
 # JsFloppyBird
 ## Floppy bird Javascript Edition
 
-![screen shot](doc/screen_shot.jpeg)
+![screen shot](doc/screen_shot.png)
 
 ### How to play
 * Mobile
