@@ -130,7 +130,6 @@ class FloppyBird {
     this._energy = new Energy();
     this._pillar = new Pillar();
     this._state = this.IDLE_STATE;
-    this.observer = [];
   }
 
   init() {

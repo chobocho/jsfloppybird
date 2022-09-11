@@ -16,6 +16,7 @@ function processKeyEvent(code) {
       printf("[Main] processKeyEvent: ", "Pause");
       gameEngine.pause();
       break;
+    case ENTER_KEY:
     case S_KEY:
       printf("[Main] processKeyEvent: ", "Start");
       gameEngine.start();

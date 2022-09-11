@@ -18,10 +18,6 @@ class Score {
     return this._highScore;
   }
 
-  setHighScore(score) {
-    return this._highScore = score;
-  }
-
   increase(additional_score) {
     this._score += additional_score;
     this._updateHighScore();
