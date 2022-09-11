@@ -1,6 +1,7 @@
 function OnDraw() {
   gameEngine.increaseTick();
   drawEngine.OnDraw();
+  updateResolution();
 }
 
 function processKeyEvent(code) {
@@ -11,7 +12,7 @@ function processKeyEvent(code) {
       printf("[Main] processKeyEvent: ", "UP");
       gameEngine.moveUp();
       break;
-    case ESC_KEY:
+    // case ESC_KEY:
     case P_KEY:
       printf("[Main] processKeyEvent: ", "Pause");
       gameEngine.pause();
@@ -61,8 +62,10 @@ function mouseListener(event) {
     case "mousemove":
       break;
     case "mouseup":
-      let pos = getMousePosition(event)
-      processMouseEvent(pos.x, pos.y);
+      if (!isMobile) {
+        let pos = getMousePosition(event)
+        processMouseEvent(pos.x, pos.y);
+      }
       break;
     case "mouseout":
       break;
@@ -104,12 +107,21 @@ function InitValue() {
   canvas.addEventListener("touchmove", touchListener, false);
 }
 
+function updateResolution() {
+  let log_msg = isMobile ? "[Mobile]" : "[PC] ";
+  log_msg += "S: Start / SPACE, Up arrow: Jump / P: Pause / Jump: " + Math.floor(offset);
+  //log_msg += "[" + canvas.width + "x" + canvas.height + "] jump: " + Math.floor(offset);
+  printf("[main] bufCtx", log_msg);
+  document.getElementById("message").innerHTML = log_msg;
+}
+
+
 function InitCanvas() {
   canvas = document.getElementById("canvas");
   let log_msg = "Width: " + canvas.width + " Height: " + canvas.height;
   printf("[main]", log_msg);
-  canvas.width = 800;
-  canvas.height = 600;
+  // canvas.width = 800;
+  // canvas.height = 600;
   cvs = canvas.getContext("2d");
   // log_msg = "Width: " + canvas.width + " Height: " + canvas.height;
   // printf("[main]", log_msg);
@@ -118,11 +130,17 @@ function InitCanvas() {
   bufCanvas.width = canvas.width;
   bufCanvas.height = canvas.height;
   bufCtx = bufCanvas.getContext("2d");
+}
 
-  log_msg = "S: Start / SPACE, Up arrow: Jump / ESC, P: Pause  ";
-  log_msg += "[" + bufCanvas.width + "x" + bufCanvas.height + "]";
-  printf("[main] bufCtx", log_msg);
-  document.getElementById("message").innerHTML = log_msg;
+const isMobileOS = () => {
+  const ua = navigator.userAgent;
+  if (/android/i.test(ua)) {
+    return true;
+  }
+  else if ((/iPad|iPhone|iPod/.test(ua)) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+    return true;
+  }
+  return false;
 }
 
 const onLoadPage = function onLoadPageFnc() {
@@ -130,6 +148,7 @@ const onLoadPage = function onLoadPageFnc() {
   InitValue();
   setInterval(OnDraw, 33);
   //setTimeout(function () { OnDraw() }, 300);
+  isMobile = isMobileOS();
 }
 
 window.onload = onLoadPage;

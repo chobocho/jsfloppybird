@@ -161,7 +161,9 @@ class FloppyBird {
     if (this._state !== this.PLAY_STATE) {
       return;
     }
-    this._y -= (this.JUMP + acceleration);
+
+    offset = this.JUMP + acceleration;
+    this._y -= offset;
     this._y = this._y > 0 ? this._y : 0;
     this._space_click_count++;
     if (this._space_click_count > 2) {

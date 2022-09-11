@@ -16,6 +16,9 @@ let drawEngine;
 let gameEngine;
 let scoreDB;
 
+let offset = 0;
+let isMobile = false;
+
 let LoadImage = function (image_name) {
   let load_image = new Image();
   load_image.src = image_name;
