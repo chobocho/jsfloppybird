@@ -53,7 +53,11 @@ class DrawEngine extends Observer {
 
   OnDraw() {
     let image = [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5, 5, 5, 5];
-    this.background_image = image[(this.game.level() - 1) % this.background.length];
+    if (this.game.level() > image.length) {
+      this.background_image = 5;
+    } else {
+      this.background_image = image[this.game.level() - 1];
+    }
 
     bufCtx.beginPath();
     this._drawBoard();
