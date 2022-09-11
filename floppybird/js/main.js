@@ -3,21 +3,21 @@ function OnDraw() {
   drawEngine.OnDraw();
 }
 
-function processEvent(code) {
-  printf("[Main] processEvent: ", code);
+function processKeyEvent(code) {
+  printf("[Main] processKeyEvent: ", code);
   switch (code) {
     case SPACE_KEY:
     case ARROW_UP_KEY:
-      printf("[Main] processEvent: ", "UP");
+      printf("[Main] processKeyEvent: ", "UP");
       gameEngine.moveUp();
       break;
     case ESC_KEY:
     case P_KEY:
-      printf("[Main] processEvent: ", "Pause");
+      printf("[Main] processKeyEvent: ", "Pause");
       gameEngine.pause();
       break;
     case S_KEY:
-      printf("[Main] processEvent: ", "Start");
+      printf("[Main] processKeyEvent: ", "Start");
       gameEngine.start();
       break;
     default:
@@ -26,7 +26,7 @@ function processEvent(code) {
 }
 
 function KeyPressEvent(e) {
-  processEvent(e.keyCode);
+  processKeyEvent(e.keyCode);
 }
 
 function getMousePosition(event) {
@@ -35,10 +35,22 @@ function getMousePosition(event) {
   return { x: mx, y: my };
 }
 
+function getTouchPosition(event) {
+  let mx = event.changedTouches[0].pageX - canvas.offsetLeft;
+  let my = event.changedTouches[0].pageY - canvas.offsetTop;
+  return { x: mx, y: my };
+}
+
 function processMouseEvent(x, y) {
   let code = drawEngine.getEventCode(x, y);
   printf("[Main] processMouseEvent: ", "(" + x + ", " + y + ") -> " + code);
-  processEvent(code);
+  processKeyEvent(code);
+}
+
+function processTouchEvent(x, y) {
+  let code = drawEngine.getEventCode(x, y);
+  printf("[Main] processTouchEvent: ", "(" + x + ", " + y + ") -> " + code);
+  processKeyEvent(code);
 }
 
 function mouseListener(event) {
@@ -56,6 +68,21 @@ function mouseListener(event) {
   }
 }
 
+function touchListener(event) {
+  switch (event.type) {
+    case "touchstart":
+      break;
+    case "touchend":
+      let pos = getTouchPosition(event);
+      processTouchEvent(pos.x, pos.y);
+      break;
+    case "touchcancel":
+      break;
+    case "touchmove":
+      break;
+  }
+}
+
 function InitValue() {
   scoreDB = new LocalDB();
   floppybird = new FloppyBird(100, 200, scoreDB.getScore());
@@ -69,6 +96,11 @@ function InitValue() {
   canvas.addEventListener("mousemove", mouseListener);
   canvas.addEventListener("mouseout", mouseListener);
   canvas.addEventListener("mouseup", mouseListener);
+
+  canvas.addEventListener("touchstart", touchListener, false);
+  canvas.addEventListener("touchend", touchListener, false);
+  canvas.addEventListener("touchcancel", touchListener, false);
+  canvas.addEventListener("touchmove", touchListener, false);
 }
 
 function InitCanvas() {
