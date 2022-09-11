@@ -17,7 +17,7 @@ let gameEngine;
 let scoreDB;
 
 let LoadImage = function (image_name) {
-  var load_image = new Image();
+  let load_image = new Image();
   load_image.src = image_name;
   return load_image;
 }

@@ -150,14 +150,8 @@ class FloppyBird {
     //observer.update(this.state.get());
   }
 
-  notify() {
-    this.observer.forEach( e => {
-      e.update(this.state.get())
-    })
-  }
-
   moveDown(acceleration) {
-    if (this._state != this.PLAY_STATE) {
+    if (this._state !== this.PLAY_STATE) {
       return;
     }
     this._y += this.GRAVITY + acceleration;
@@ -165,7 +159,7 @@ class FloppyBird {
   }
 
   moveUp(acceleration) {
-    if (this._state != this.PLAY_STATE) {
+    if (this._state !== this.PLAY_STATE) {
       return;
     }
     this._y -= (this.JUMP + acceleration);
@@ -178,7 +172,7 @@ class FloppyBird {
   }
 
   moveRight(acceleration) {
-    if (this._state != this.PLAY_STATE) {
+    if (this._state !== this.PLAY_STATE) {
       return;
     }
     this._pillar.move(acceleration);
@@ -186,20 +180,20 @@ class FloppyBird {
 
   start() {
     console.log("[FloppyBird] Start()" + this._state);
-    if (this._state == this.PLAY_STATE) {
+    if (this._state === this.PLAY_STATE) {
       return;
     }
 
-    if (this._state == this.PAUSE_STATE || this._state == this.IDLE_STATE) {
+    if (this._state === this.PAUSE_STATE || this._state === this.IDLE_STATE) {
       this._state = this.PLAY_STATE;
-    } else if (this._state == this.GAME_OVER_STATE) {
+    } else if (this._state === this.GAME_OVER_STATE) {
       this.init();
       this._state = this.PLAY_STATE;
     }
   }
 
   pause() {
-    if (this._state != this.PLAY_STATE) {
+    if (this._state !== this.PLAY_STATE) {
       return;
     }
     console.log("Pause");
@@ -222,10 +216,6 @@ class FloppyBird {
 
   level() {
     return this._level;
-  }
-
-  setHighScore(score) {
-    this._score.setHighScore(score);
   }
 
   tick() {
@@ -253,19 +243,19 @@ class FloppyBird {
   }
 
   isIdleState() {
-    return this._state == this.IDLE_STATE;
+    return this._state === this.IDLE_STATE;
   }
 
   isPlayState() {
-    return this._state == this.PLAY_STATE;
+    return this._state === this.PLAY_STATE;
   }
 
   isPauseState() {
-    return this._state == this.PAUSE_STATE;
+    return this._state === this.PAUSE_STATE;
   }
 
   isGameOverState() {
-    return this._state == this.GAME_OVER_STATE;
+    return this._state === this.GAME_OVER_STATE;
   }
 
   energy() {
@@ -301,10 +291,10 @@ class FloppyBird {
   }
 
   isAlive() {
-    if (this._state != this.PLAY_STATE) {
+    if (this._state !== this.PLAY_STATE) {
       return false;
     }
-    if (this._energy.energy() == 0) {
+    if (this._energy.energy() === 0) {
       this._state = this.GAME_OVER_STATE;
       return false;
     }
