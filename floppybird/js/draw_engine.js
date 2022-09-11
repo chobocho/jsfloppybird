@@ -40,6 +40,7 @@ class DrawEngine extends Observer {
     this.buttonImage['coin'] = LoadImage(root + "/coin.png");
     this.buttonImage['start'] = LoadImage(root + "/start.png");
     this.buttonImage['resume'] = LoadImage(root + "/resume.png");
+    this.buttonImage['pause'] = LoadImage(root + "/pause.png");
 
     this.birdImage = [];
     this.birdImage[0] = LoadImage(root + "/bird01.png");
@@ -81,7 +82,7 @@ class DrawEngine extends Observer {
       bufCtx.drawImage(this.buttonImage['start'], 250, 100, 300, 163);
       this._drawHighScore();
     }  else if (this.game.isPlayState()) {
-      // Do nothing
+      bufCtx.drawImage(this.buttonImage['pause'], 710, 510, 80, 80);
     }
   }
 
@@ -205,6 +206,9 @@ class DrawEngine extends Observer {
         return S_KEY;
       }
     }  else if (this.game.isPlayState()) {
+      if (x > 710 && x < 710+80 && y > 510 && y < 510+80) {
+        return P_KEY;
+      }
       return SPACE_KEY;
     }
     return SPACE_KEY;
