@@ -189,4 +189,24 @@ class DrawEngine extends Observer {
   _drawBackground() {
     bufCtx.drawImage(this.background[this.background_image], 0, 0, canvas.width, canvas.height);
   }
+
+  getEventCode(x, y) {
+    printf("[DrawEngine] getEventCode() ", this.game.state() + " (" + x + ", " + y + ")");
+    if (this.game.isIdleState()) {
+      if (x > 250 && x < 250+300 && y > 100 && y < 100+163) {
+        return S_KEY;
+      }
+    } else if (this.game.isPauseState()) {
+      if (x > 300 && x < 300+200 && y > 100 && y < 100+100) {
+        return S_KEY;
+      }
+    }  else if (this.game.isGameOverState()) {
+      if (x > 250 && x < 250+300 && y > 100 && y < 100+163) {
+        return S_KEY;
+      }
+    }  else if (this.game.isPlayState()) {
+      return SPACE_KEY;
+    }
+    return SPACE_KEY;
+  }
 }

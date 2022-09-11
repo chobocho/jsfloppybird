@@ -6,17 +6,17 @@ function OnDraw() {
 function processEvent(code) {
   printf("[Main] processEvent: ", code);
   switch (code) {
-    case 32:
-    case 38:
+    case SPACE_KEY:
+    case ARROW_UP_KEY:
       printf("[Main] processEvent: ", "UP");
       gameEngine.moveUp();
       break;
-    case 27:
-    case 80:
+    case ESC_KEY:
+    case P_KEY:
       printf("[Main] processEvent: ", "Pause");
       gameEngine.pause();
       break;
-    case 83:
+    case S_KEY:
       printf("[Main] processEvent: ", "Start");
       gameEngine.start();
       break;
@@ -29,6 +29,33 @@ function KeyPressEvent(e) {
   processEvent(e.keyCode);
 }
 
+function getMousePosition(event) {
+  let mx = event.pageX - canvas.offsetLeft;
+  let my = event.pageY - canvas.offsetTop;
+  return { x: mx, y: my };
+}
+
+function processMouseEvent(x, y) {
+  let code = drawEngine.getEventCode(x, y);
+  printf("[Main] processMouseEvent: ", "(" + x + ", " + y + ") -> " + code);
+  processEvent(code);
+}
+
+function mouseListener(event) {
+  switch (event.type) {
+    case "mousedown":
+      break;
+    case "mousemove":
+      break;
+    case "mouseup":
+      let pos = getMousePosition(event)
+      processMouseEvent(pos.x, pos.y);
+      break;
+    case "mouseout":
+      break;
+  }
+}
+
 function InitValue() {
   scoreDB = new LocalDB();
   floppybird = new FloppyBird(100, 200, scoreDB.getScore());
@@ -37,6 +64,11 @@ function InitValue() {
   drawEngine = new DrawEngine(floppybird);
 
   window.onkeydown = KeyPressEvent;
+
+  canvas.addEventListener("mousedown", mouseListener);
+  canvas.addEventListener("mousemove", mouseListener);
+  canvas.addEventListener("mouseout", mouseListener);
+  canvas.addEventListener("mouseup", mouseListener);
 }
 
 function InitCanvas() {
