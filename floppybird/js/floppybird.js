@@ -276,9 +276,7 @@ class FloppyBird {
         return false;
     if (this._x + this.core_rect[0] > x2)
         return false;
-    if (this._y + this.core_rect[1] > y)
-        return false;
-    return true;
+    return this._y + this.core_rect[1] <= y;
   }
 
   downCollision(x1, x2, y) {
@@ -286,9 +284,7 @@ class FloppyBird {
       return false;
     if (this._x + this.core_rect[0] > x2)
       return false;
-    if (this._y + this.core_rect[3] < y)
-      return false;
-    return true;
+    return this._y + this.core_rect[3] >= y;
   }
 
   isAlive() {
