@@ -14,24 +14,80 @@ class Observer {
   }
 }
 
-class Pillar {
+class Item {
   constructor() {
-    this._pillars = [];
-    this._coins = [];
+    this.ITEM_NONE = 0;
+    this.ITEM_COIN = 1;
+    this.ITEM_RED_BOTTLE = 2;
+    this.ITEM_PINK_BOTTLE = 3;
+    this.ITEM_SHIELD = 4;
+
+    this._items = [];
   }
 
   init() {
-    this._coins = [[0, 0]];
+    this._items = [[0, 0, 0]];
+  }
+
+  item() {
+    return this._items;
+  }
+
+  pop() {
+    this._items.splice(0, 1);
+  }
+
+  move(speed=1) {
+    printf("[Item] ", "Speed:" + speed);
+
+    for (let i = 0; i < this._items.length; i++) {
+      this._items[i][0] -= speed;
+    }
+  }
+
+  make_new_item(px, top, down) {
+    let item_y = top + Math.floor((9-top-down)/2);
+    if (getRandomInt(0, 10) < 6) {
+      this._items.push([-1, item_y, this.ITEM_NONE]);
+      return;
+    }
+
+    let next_item_value = getRandomInt(0, 100);
+    let item_type = this.ITEM_NONE;
+    if (next_item_value < 10) {
+      item_type = this.ITEM_RED_BOTTLE;
+    } else if (next_item_value < 20) {
+      item_type = this.ITEM_SHIELD;
+    } else if (next_item_value < 40) {
+      item_type = this.ITEM_PINK_BOTTLE;
+    } else  {
+      item_type = this.ITEM_COIN;
+    }
+
+    let item_x = item_type !== this.ITEM_NONE ? px : -1;
+    this._items.push([item_x, item_y, item_type]);
+  }
+
+  removeFirstItem() {
+    this._items[0][0] = -1;
+  }
+}
+
+class Pillar {
+  constructor(items) {
+    this._pillars = [];
+    this._items = items;
+  }
+
+  init() {
+    this._items.init();
     this._pillars= [[200, 0, 0]];
 
     for (let i = 0; i < 4; ++i) {
       let down = getRandomInt(0, 5);
       let top = getRandomInt(0, 5 - down);
       this._pillars.push([400 + i * 200, top, down])
-      if (i < 3)
-        this._coins.push([0, top + Math.floor((9-top-down)/2)]);
-      else
-        this._coins.push([400 + i * 200, top + Math.floor((9 - top - down) / 2)]);
+      this._items.make_new_item(400 + i * 200, top, down);
     }
   }
 
@@ -42,13 +98,9 @@ class Pillar {
       this._pillars[i][0] -= speed;
     }
 
-    for (let i = 0; i < this._coins.length; i++) {
-      this._coins[i][0] -= speed;
+    if (this._pillars[0][0] < -60) {
+      this._make_new_pillar(speed);
     }
-
-    if (this._pillars[0][0] < -60)
-        this._make_new_pillar(speed);
-
   }
 
   _make_new_pillar(gameSpeed=1) {
@@ -63,22 +115,12 @@ class Pillar {
     let top = getRandomInt(0, block_count - down);
     this._pillars.push([px, top, down]);
 
-    this._coins.splice(0, 1);
-    let coin_y = top+Math.floor((9-top-down)/2);
-    let coin_x = getRandomInt(0, 10) > 6 ? px : -1;
-    this._coins.push([coin_x, coin_y])
+    this._items.pop();
+    this._items.make_new_item(px, top, down);
   }
 
   pillar() {
     return this._pillars;
-  }
-
-  coin() {
-    return this._coins;
-  }
-
-  removeFirstCoin() {
-    this._coins[0][0] = -1;
   }
 }
 
@@ -126,9 +168,11 @@ class FloppyBird {
     this._level = 1;
     this._tick = 0;
     this._space_click_count = 0;
+    this._invincibility = 125;
     this._score = new Score(highscore);
     this._energy = new Energy();
-    this._pillar = new Pillar();
+    this._items = new Item();
+    this._pillar = new Pillar(this._items);
     this._state = this.IDLE_STATE;
   }
 
@@ -136,12 +180,17 @@ class FloppyBird {
     this._level = 1;
     this._tick = 0;
     this._space_click_count = 0;
+    this._invincibility = 125;
     this._x = this._startX;
     this._y = this._startY;
     this._score.init();
     this._pillar.init();
     this._energy.init();
     this._state = this.IDLE_STATE;
+  }
+
+  invincibility() {
+    return this._invincibility;
   }
 
   register(observer) {
@@ -177,6 +226,7 @@ class FloppyBird {
       return;
     }
     this._pillar.move(acceleration);
+    this._items.move(acceleration);
   }
 
   start() {
@@ -225,9 +275,12 @@ class FloppyBird {
 
   increaseTick() {
     this._tick++;
-    if (this._tick > 30) {
+    if (this._tick > 25) {
       this._tick = 0;
       this._energy.decrease(1);
+    }
+    if (this._invincibility > 0) {
+      this._invincibility--;
     }
   }
 
@@ -267,8 +320,8 @@ class FloppyBird {
     return this._pillar.pillar();
   }
 
-  coin() {
-    return this._pillar.coin();
+  item() {
+    return this._items.item();
   }
 
   upCollision(x1, x2, y) {
@@ -303,6 +356,9 @@ class FloppyBird {
     }
 
     let p = this._pillar.pillar();
+    if (this._invincibility > 0) {
+      return true;
+    }
     for (let i = 0; i < p.length; i++) {
       if (this.upCollision(p[i][0], p[i][0] + 60, p[i][1] * 60 + 60)
         || this.downCollision(p[i][0], p[i][0] + 60, 540 - p[i][2] * 60)) {
@@ -313,14 +369,22 @@ class FloppyBird {
     return true;
   }
 
-  checkGetCoin() {
-     let coins = this.coin();
-     if (this.upCollision(coins[0][0], coins[0][0] + 60, coins[0][1] * 60)
-       || this.downCollision(coins[0][0], coins[0][0] + 60, coins[0][1] * 60 + 60)) {
-       this._pillar.removeFirstCoin();
-       this._score.increase(2022);
-       this._energy.increase(48);
-       printf("[Floppybird] ", "Get Coins");
+  checkGetItem() {
+     let item = this._items.item();
+     let item_type = item[0][2];
+    printf("[Floppybird] ", "Get Items " + item_type);
+     if (this.upCollision(item[0][0], item[0][0] + 60, item[0][1] * 60)
+       || this.downCollision(item[0][0], item[0][0] + 60, item[0][1] * 60 + 60)) {
+       this._items.removeFirstItem();
+       let scoreTable = [0, 812, 3022, 2022, 3022];
+       let energyTable = [0, 20, 50, 30, 100];
+       this._score.increase(scoreTable[item_type]);
+       this._energy.increase(energyTable[item_type]);
+
+       if (item_type === this._items.ITEM_SHIELD) {
+         this._invincibility = 125;
+       }
+       printf("[Floppybird] ", "Get Items");
      }
   }
 

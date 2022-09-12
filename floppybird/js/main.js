@@ -8,11 +8,11 @@ function processKeyEvent(code) {
   printf("[Main] processKeyEvent: ", code);
   switch (code) {
     case SPACE_KEY:
+    case J_KEY:
     case ARROW_UP_KEY:
       printf("[Main] processKeyEvent: ", "UP");
       gameEngine.moveUp();
       break;
-    // case ESC_KEY:
     case P_KEY:
       printf("[Main] processKeyEvent: ", "Pause");
       gameEngine.pause();
@@ -109,7 +109,7 @@ function InitValue() {
 
 function updateResolution() {
   let log_msg = isMobile ? "[Mobile]" : "[PC] ";
-  log_msg += "S: Start / SPACE, Up arrow: Jump / P: Pause / Jump: " + Math.floor(offset);
+  log_msg += "S: Start / SPACE, J, ↑: Jump / P: Pause / Jump: " + Math.floor(offset);
   //log_msg += "[" + canvas.width + "x" + canvas.height + "] jump: " + Math.floor(offset);
   printf("[main] bufCtx", log_msg);
   document.getElementById("message").innerHTML = log_msg;
@@ -146,7 +146,7 @@ const isMobileOS = () => {
 const onLoadPage = function onLoadPageFnc() {
   InitCanvas();
   InitValue();
-  setInterval(OnDraw, 33);
+  setInterval(OnDraw, 40);
   //setTimeout(function () { OnDraw() }, 300);
   isMobile = isMobileOS();
 }

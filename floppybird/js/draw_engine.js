@@ -5,10 +5,12 @@ class DrawEngine extends Observer {
     this.game.register(this);
     this._InitValue();
     this._LoadImage();
+    this._tick = 0;
   }
 
   _InitValue() {
     this.background_image = 0;
+    this._tick = 0;
   }
 
   _LoadImage() {
@@ -37,6 +39,7 @@ class DrawEngine extends Observer {
     this.buttonImage['tile_top'] = LoadImage(root + "/tile01.png");
     this.buttonImage['tile_down'] = LoadImage(root + "/tile02.png");
     this.buttonImage['tile_body'] = LoadImage(root + "/tile03.png");
+    this.buttonImage['bar'] = LoadImage(root + "/bar.png");
     this.buttonImage['coin'] = LoadImage(root + "/coin.png");
     this.buttonImage['shield'] = LoadImage(root + "/shield.png");
     this.buttonImage['red_bottle'] = LoadImage(root + "/redbottle.png");
@@ -51,11 +54,17 @@ class DrawEngine extends Observer {
     this.birdImage[2] = LoadImage(root + "/bird03.png");
     this.birdImage[3] = LoadImage(root + "/bird04.png");
 
+    this.circleImage = [];
+    this.circleImage[0] = LoadImage(root + "/circle1.png");
+    this.circleImage[1] = LoadImage(root + "/circle2.png");
+    this.circleImage[2] = LoadImage(root + "/circle3.png");
+    this.circleImage[3] = LoadImage(root + "/circle4.png");
+
     printf("[DrawEngine]", "_LoadImage");
   }
 
   OnDraw() {
-    let image = [0, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5];
+    let image = [0, 0, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5];
     if (this.game.level() > image.length) {
       this.background_image = 5;
     } else {
@@ -94,11 +103,20 @@ class DrawEngine extends Observer {
   }
 
   _drawBird() {
-    bufCtx.drawImage(this.birdImage[this.game.tick()%4], this.game.x(), this.game.y(), 60, 51);
+    this._tick++;
+    let birdFrame = Math.floor(this._tick/5);
+    if (birdFrame > 3) {
+      this._tick = 0;
+    }
+    bufCtx.drawImage(this.birdImage[birdFrame], this.game.x(), this.game.y(), 60, 51);
+
+    if (this.game.isPlayState() && this.game.invincibility() ) {
+      bufCtx.drawImage(this.circleImage[birdFrame], this.game.x()-5, this.game.y()-10, 75, 75);
+    }
   }
 
   _drawPillar() {
-    let coin = this.game.coin();
+    let item = this.game.item();
     let pillar = this.game.pillar();
 
     for (let i = 0; i < pillar.length; i++) {
@@ -119,33 +137,24 @@ class DrawEngine extends Observer {
       }
       bufCtx.drawImage(this.buttonImage['tile_down'], x, 540 - p[2]*60, 60, 60);
 
-      if (coin[i][0] > 0)
-          bufCtx.drawImage(this.buttonImage['coin'], coin[i][0], coin[i][1] * 60, 60, 60);
+      if (item[i][0] > 0) {
+        let itemName = ['coin', 'coin', 'red_bottle', 'pink_bottle', 'shield'];
+        bufCtx.drawImage(this.buttonImage[itemName[item[i][2]]], item[i][0], item[i][1] * 60, 60, 60);
+      }
     }
   }
 
   _drawEnergy() {
     // printf("[DrawEngine] _drawScore()", this.game.score());
-    let code = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    let energy = this.game.energy();
-    let pos = 3;
+    let energy = Math.floor(this.game.energy() * 2);
     let blockSize = 30;
-    let startX = 500-blockSize*0.6*pos;
+    let startX = 300;
     let startY = 10;
 
-    // printf("[DrawEngine] _drawScore()", startX + ", " + startY);
+    bufCtx.drawImage(this.buttonImage['bar'], startX, startY, 204, blockSize);
+    bufCtx.fillStyle = '#000000';
 
-    if (energy < 80) {
-      bufCtx.fillStyle = '#FF000055';
-      bufCtx.fillRect(startX, startY, 120, blockSize);
-    }
-
-    bufCtx.drawImage(this.buttonImage[code[energy%10]], startX + blockSize * 0.6 * pos, startY, blockSize * 0.6, blockSize);
-    while (energy > 0) {
-      bufCtx.drawImage(this.buttonImage[code[energy%10]], startX + blockSize * 0.6 * pos, startY, blockSize * 0.6, blockSize);
-      energy = Math.floor(energy / 10);
-      pos--;
-    }
+    bufCtx.fillRect(startX+2+200-(200-energy), startY+2, 200-energy, blockSize-4);
   }
 
 
@@ -161,6 +170,10 @@ class DrawEngine extends Observer {
     // printf("[DrawEngine] _drawScore()", startX + ", " + startY);
 
     bufCtx.drawImage(this.buttonImage['score'], startX-120, 10, 120, blockSize);
+
+    bufCtx.fillStyle = '#0000FF33';
+    bufCtx.fillRect(startX, startY, blockSize*0.8*pos, blockSize);
+
     bufCtx.drawImage(this.buttonImage[code[score%10]], startX + blockSize * 0.6 * pos, startY, blockSize * 0.6, blockSize);
     while (score > 0) {
       bufCtx.drawImage(this.buttonImage[code[score%10]], startX + blockSize * 0.6 * pos, startY, blockSize * 0.6, blockSize);

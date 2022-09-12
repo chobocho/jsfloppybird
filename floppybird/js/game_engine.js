@@ -7,10 +7,6 @@ class GameEngine extends Observer {
     this._start_score = 19000;
   }
 
-  tick() {
-    return this.game.tick();
-  }
-
   increaseTick() {
     if (!this.game.isPlayState()) {
       return;
@@ -24,7 +20,7 @@ class GameEngine extends Observer {
     let acceleration = score > this._reference_score ? (score - this._reference_score) / 10000 : 0;
     this.moveRight(acceleration);
     this.moveDown(acceleration);
-    this.game.checkGetCoin();
+    this.game.checkGetItem();
     this.game.isAlive();
 
     if (this.game.isGameOverState()) {
