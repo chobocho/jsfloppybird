@@ -104,8 +104,9 @@ class DrawEngine extends Observer {
 
   _drawBird() {
     this._tick++;
-    let birdFrame = Math.floor(this._tick/5);
+    let birdFrame = Math.floor(this._tick / 5);
     if (birdFrame > 3) {
+      birdFrame = 3;
       this._tick = 0;
     }
     bufCtx.drawImage(this.birdImage[birdFrame], this.game.x(), this.game.y(), 60, 51);
