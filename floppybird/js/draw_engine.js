@@ -38,6 +38,9 @@ class DrawEngine extends Observer {
     this.buttonImage['tile_down'] = LoadImage(root + "/tile02.png");
     this.buttonImage['tile_body'] = LoadImage(root + "/tile03.png");
     this.buttonImage['coin'] = LoadImage(root + "/coin.png");
+    this.buttonImage['shield'] = LoadImage(root + "/shield.png");
+    this.buttonImage['red_bottle'] = LoadImage(root + "/redbottle.png");
+    this.buttonImage['pink_bottle'] = LoadImage(root + "/pinkbottle.png");
     this.buttonImage['start'] = LoadImage(root + "/start.png");
     this.buttonImage['resume'] = LoadImage(root + "/resume.png");
     this.buttonImage['pause'] = LoadImage(root + "/pause.png");
