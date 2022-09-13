@@ -110,8 +110,10 @@ class DrawEngine {
     }
     bufCtx.drawImage(this.birdImage[birdFrame], this.game.x(), this.game.y(), 60, 51);
 
-    if (this.game.isPlayState() && this.game.invincibility() ) {
+    if (this.game.isPlayState() && this.game.shield() > 0) {
+      bufCtx.globalAlpha = this.game.shield()/250;
       bufCtx.drawImage(this.circleImage[birdFrame], this.game.x()-5, this.game.y()-10, 75, 75);
+      bufCtx.globalAlpha = 1.0;
     }
   }
 

@@ -18,10 +18,10 @@ class FloppyBird {
     this._level = 1;
     this._tick = 0;
     this._space_click_count = 0;
-    this._invincibility = 125;
+    this._shield = new Shield();
     this._score = new Score(highscore);
-    this._energy = new Energy();
-    this._items = new Item();
+    this._energy = new Energy(this);
+    this._items = new Item(this);
     this._pillar = new Pillar(this._items);
     this._state = this.IDLE_STATE;
   }
@@ -30,17 +30,17 @@ class FloppyBird {
     this._level = 1;
     this._tick = 0;
     this._space_click_count = 0;
-    this._invincibility = 125;
     this._x = this._startX;
     this._y = this._startY;
+    this._shield.init();
     this._score.init();
     this._pillar.init();
     this._energy.init();
     this._state = this.IDLE_STATE;
   }
 
-  invincibility() {
-    return this._invincibility;
+  shield() {
+    return this._shield.energy();
   }
 
   register(observer) {
@@ -91,6 +91,7 @@ class FloppyBird {
       this.init();
       this._state = this.PLAY_STATE;
     }
+    this.startShield();
   }
 
   pause() {
@@ -129,8 +130,8 @@ class FloppyBird {
       this._tick = 0;
       this._energy.decrease(1);
     }
-    if (this._invincibility > 0) {
-      this._invincibility--;
+    if (this._shield.isAlive()) {
+      this._shield.decrease(1);
     }
   }
 
@@ -206,17 +207,25 @@ class FloppyBird {
     }
 
     let p = this._pillar.pillar();
-    if (this._invincibility > 0) {
-      return true;
-    }
+
     for (let i = 0; i < p.length; i++) {
       if (this.upCollision(p[i][0], p[i][0] + 60, p[i][1] * 60 + 60)
         || this.downCollision(p[i][0], p[i][0] + 60, 540 - p[i][2] * 60)) {
+
+        if (this._shield.isAlive()) {
+          this._shield.decrease(1);
+          return true;
+        }
+
         this._state = this.GAME_OVER_STATE;
         return false;
       }
     }
     return true;
+  }
+
+  startShield() {
+    this._shield.start();
   }
 
   checkGetItem() {
@@ -228,14 +237,15 @@ class FloppyBird {
         || this.downCollision(item[0][0], item[0][0] + 60, item[0][1] * 60 + 60)) {
       this._items.removeFirstItem();
       let scoreTable = [0, 812, 3022, 2022, 3022];
-      let energyTable = [0, 20, 50, 30, 100];
+      let energyTable = [0, 10, 50, 20, 100];
       this._score.increase(scoreTable[itemType]);
       this._energy.increase(energyTable[itemType]);
 
       if (itemType === this._items.ITEM_SHIELD) {
-        this._invincibility = 125;
+        this.startShield();
       }
-      printf("[Floppybird] ", "Get Items");
+
+      printf("[Floppybird] ", "Get Items:" + itemType);
     }
   }
 

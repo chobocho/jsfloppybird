@@ -1,6 +1,7 @@
 class Energy {
-    constructor() {
+    constructor(game) {
         this._energy = 100;
+        this.game = game;
     }
 
     init() {
@@ -13,7 +14,10 @@ class Energy {
 
     increase(value) {
         this._energy += value;
-        this._energy = this._energy > 100 ? 100 : this._energy;
+        if (this._energy > 100) {
+            this._energy = 100;
+            this.game.startShield();
+        }
     }
 
     decrease(value) {

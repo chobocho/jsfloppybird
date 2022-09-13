@@ -1,5 +1,5 @@
 class Item {
-    constructor() {
+    constructor(game) {
         this.ITEM_NONE = 0;
         this.ITEM_COIN = 1;
         this.ITEM_RED_BOTTLE = 2;
@@ -7,6 +7,7 @@ class Item {
         this.ITEM_SHIELD = 4;
 
         this._items = [];
+        this.game = game;
     }
 
     init() {
@@ -31,25 +32,28 @@ class Item {
 
     make_new_item(px, top, down) {
         let item_y = top + Math.floor((9 - top - down) / 2);
+
         if (getRandomInt(0, 10) < 6) {
-            this._items.push([-1, item_y, this.ITEM_NONE]);
+            if (this.game.energy() < 30) {
+                this._items.push([px, item_y, this.ITEM_COIN]);
+            } else {
+                this._items.push([-1, item_y, this.ITEM_NONE]);
+            }
             return;
         }
 
-        let next_item_value = getRandomInt(0, 100);
         let item_type = this.ITEM_NONE;
-        if (next_item_value < 10) {
-            item_type = this.ITEM_RED_BOTTLE;
-        } else if (next_item_value < 20) {
+        if (getRandomInt(0, 100) < 10) {
             item_type = this.ITEM_SHIELD;
-        } else if (next_item_value < 40) {
+        } else if (this.game.energy() < 30) {
+            item_type = this.ITEM_RED_BOTTLE;
+        } else if (this.game.energy() < 50) {
             item_type = this.ITEM_PINK_BOTTLE;
         } else {
             item_type = this.ITEM_COIN;
         }
 
-        let item_x = item_type !== this.ITEM_NONE ? px : -1;
-        this._items.push([item_x, item_y, item_type]);
+        this._items.push([px, item_y, item_type]);
     }
 
     removeFirstItem() {
