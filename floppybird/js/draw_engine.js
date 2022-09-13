@@ -1,6 +1,5 @@
-class DrawEngine extends Observer {
+class DrawEngine {
   constructor(game) {
-    super();
     this.game = game;
     this.game.register(this);
     this._InitValue();
@@ -140,7 +139,11 @@ class DrawEngine extends Observer {
 
       if (item[i][0] > 0) {
         let itemName = ['coin', 'coin', 'red_bottle', 'pink_bottle', 'shield'];
-        bufCtx.drawImage(this.buttonImage[itemName[item[i][2]]], item[i][0], item[i][1] * 60, 60, 60);
+        if (item[i][2] <= 1) {
+          bufCtx.drawImage(this.buttonImage[itemName[item[i][2]]], item[i][0], item[i][1] * 60, 60, 60);
+        } else {
+          bufCtx.drawImage(this.buttonImage[itemName[item[i][2]]], item[i][0], item[i][1] * 60, 60, 51);
+        }
       }
     }
   }

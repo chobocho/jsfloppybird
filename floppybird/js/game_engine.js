@@ -1,6 +1,5 @@
-class GameEngine extends Observer {
+class GameEngine{
   constructor(game, db) {
-    super();
     this.game = game;
     this.scoreDB = db;
     this._reference_score = 20000;
