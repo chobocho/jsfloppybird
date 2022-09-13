@@ -115,10 +115,6 @@ class FloppyBird {
     return this._level;
   }
 
-  tick() {
-    return this._tick;
-  }
-
   increaseTick() {
     this._tick++;
     if (this._tick > 25) {
