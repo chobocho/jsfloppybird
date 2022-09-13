@@ -33,7 +33,7 @@ class Item {
     make_new_item(px, top, down) {
         let item_y = top + Math.floor((9 - top - down) / 2);
 
-        if (getRandomInt(0, 10) < 6) {
+        if (getRandomInt(0, 10) < 7) {
             if (this.game.energy() < 30) {
                 this._items.push([px, item_y, this.ITEM_COIN]);
             } else {
@@ -43,9 +43,9 @@ class Item {
         }
 
         let item_type = this.ITEM_NONE;
-        if (getRandomInt(0, 100) < 10) {
+        if (getRandomInt(0, 100) < 8) {
             item_type = this.ITEM_SHIELD;
-        } else if (this.game.energy() < 30) {
+        } else if (this.game.energy() < 30 || getRandomInt(0, 100) > 90) {
             item_type = this.ITEM_RED_BOTTLE;
         } else if (this.game.energy() < 50) {
             item_type = this.ITEM_PINK_BOTTLE;

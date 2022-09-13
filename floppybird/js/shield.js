@@ -1,5 +1,5 @@
 class Shield {
-    constructor(game) {
+    constructor() {
         this._energy = 0;
     }
 

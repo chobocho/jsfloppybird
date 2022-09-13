@@ -1,7 +1,6 @@
 class DrawEngine {
   constructor(game) {
     this.game = game;
-    this.game.register(this);
     this._InitValue();
     this._LoadImage();
     this._tick = 0;

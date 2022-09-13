@@ -43,11 +43,6 @@ class FloppyBird {
     return this._shield.energy();
   }
 
-  register(observer) {
-    //this.observer.push(observer);
-    //observer.update(this.state.get());
-  }
-
   moveDown(acceleration) {
     if (this._state !== this.PLAY_STATE) {
       return;
