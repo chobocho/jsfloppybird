@@ -37,6 +37,7 @@ class FloppyBird {
     this._pillar.init();
     this._energy.init();
     this._state = this.IDLE_STATE;
+    this._shield.start();
   }
 
   shield() {
@@ -86,7 +87,6 @@ class FloppyBird {
       this.init();
       this._state = this.PLAY_STATE;
     }
-    this.startShield();
   }
 
   pause() {
@@ -116,6 +116,9 @@ class FloppyBird {
   }
 
   increaseTick() {
+    if (!this.isPlayState()) {
+      return;
+    }
     this._tick++;
     if (this._tick > 25) {
       this._tick = 0;
