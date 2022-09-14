@@ -30,12 +30,25 @@ class Item {
         }
     }
 
+    _has_energy_items() {
+        let count = 0;
+        for (let i = 0; i < this._items.length; i++) {
+            if (this._items[i][0] < 0) {
+                continue;
+            }
+            if (this._items[i][2] > this.ITEM_COIN) {
+                count++;
+            }
+        }
+        return count >= 2;
+    }
+
     make_new_item(px, top, down) {
         let item_y = top + Math.floor((9 - top - down) / 2);
 
-        if (getRandomInt(0, 10) < 7) {
-            if (this.game.energy() < 30) {
-                this._items.push([px, item_y, this.ITEM_COIN]);
+        if (getRandomInt(0, 100) < 70) {
+            if (this.game.energy() < 70 && !this._has_energy_items()) {
+                this._items.push([px, item_y, this.ITEM_PINK_BOTTLE]);
             } else {
                 this._items.push([-1, item_y, this.ITEM_NONE]);
             }
@@ -45,10 +58,8 @@ class Item {
         let item_type = this.ITEM_NONE;
         if (getRandomInt(0, 100) < 8) {
             item_type = this.ITEM_SHIELD;
-        } else if (this.game.energy() < 30 || getRandomInt(0, 100) > 90) {
+        } else if (this.game.energy() < 50 && !this._has_energy_items()) {
             item_type = this.ITEM_RED_BOTTLE;
-        } else if (this.game.energy() < 50) {
-            item_type = this.ITEM_PINK_BOTTLE;
         } else {
             item_type = this.ITEM_COIN;
         }

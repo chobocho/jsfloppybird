@@ -146,7 +146,7 @@ const isMobileOS = () => {
 const onLoadPage = function onLoadPageFnc() {
   InitCanvas();
   InitValue();
-  setInterval(OnDraw, 40);
+  setInterval(OnDraw, 30);
   //setTimeout(function () { OnDraw() }, 300);
   isMobile = isMobileOS();
 }

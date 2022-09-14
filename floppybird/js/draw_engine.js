@@ -142,10 +142,10 @@ class DrawEngine {
 
       if (item[i][0] > 0) {
         let itemName = ['coin', 'coin', 'red_bottle', 'pink_bottle', 'shield'];
-        if (item[i][2] <= 1) {
-          bufCtx.drawImage(this.buttonImage[itemName[item[i][2]]], item[i][0], item[i][1] * 60, 60, 60);
-        } else {
+        if (item[i][2] > 1) {
           bufCtx.drawImage(this.buttonImage[itemName[item[i][2]]], item[i][0], item[i][1] * 60, 60, 51);
+        } else if (item[i][2] === 1) {
+          bufCtx.drawImage(this.buttonImage[itemName[item[i][2]]], item[i][0], item[i][1] * 60, 60, 60);
         }
       }
     }
@@ -155,7 +155,7 @@ class DrawEngine {
     // printf("[DrawEngine] _drawScore()", this.game.score());
     let energy = Math.floor(this.game.energy() * 2);
     let blockSize = 30;
-    let startX = 10;
+    let startX = 790-204;
     let startY = 10;
 
     bufCtx.drawImage(this.buttonImage['bar'], startX, startY, 204, blockSize);
@@ -171,7 +171,7 @@ class DrawEngine {
     let score = this.game.score();
     let pos = 7;
     let blockSize = 30;
-    let startX = (200-blockSize*0.6*pos)/2;
+    let startX = 770-(blockSize*0.6*pos);
     let startY = 10;
 
     bufCtx.drawImage(this.buttonImage[code[score%10]], startX + blockSize * 0.6 * pos, startY, blockSize * 0.6, blockSize);

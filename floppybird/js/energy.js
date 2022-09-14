@@ -15,8 +15,10 @@ class Energy {
     increase(value) {
         this._energy += value;
         if (this._energy > 100) {
+            if (this._energy > 108) {
+                this.game.startShield();
+            }
             this._energy = 100;
-            this.game.startShield();
         }
     }
 
