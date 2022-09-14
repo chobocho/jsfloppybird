@@ -230,7 +230,7 @@ class FloppyBird {
     if (this.upCollision(item[0][0], item[0][0] + 60, item[0][1] * 60)
         || this.downCollision(item[0][0], item[0][0] + 60, item[0][1] * 60 + 60)) {
       this._items.removeFirstItem();
-      let scoreTable = [0, 128, 1024, 2048, 3072];
+      let scoreTable = [0, 512, 1024, 2048, 3072];
       // None, Coin, RED, PINK, SHIELD
       let energyTable = [0, 3, 12, 32, 100];
       this._score.increase(scoreTable[itemType]);
