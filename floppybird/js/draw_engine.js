@@ -155,7 +155,7 @@ class DrawEngine {
     // printf("[DrawEngine] _drawScore()", this.game.score());
     let energy = Math.floor(this.game.energy() * 2);
     let blockSize = 30;
-    let startX = 300;
+    let startX = 10;
     let startY = 10;
 
     bufCtx.drawImage(this.buttonImage['bar'], startX, startY, 204, blockSize);
@@ -171,15 +171,8 @@ class DrawEngine {
     let score = this.game.score();
     let pos = 7;
     let blockSize = 30;
-    let startX = 780-blockSize*0.6*pos;
+    let startX = (200-blockSize*0.6*pos)/2;
     let startY = 10;
-
-    // printf("[DrawEngine] _drawScore()", startX + ", " + startY);
-
-    bufCtx.drawImage(this.buttonImage['score'], startX-120, 10, 120, blockSize);
-
-    bufCtx.fillStyle = '#0000FF33';
-    bufCtx.fillRect(startX, startY, blockSize*0.8*pos, blockSize);
 
     bufCtx.drawImage(this.buttonImage[code[score%10]], startX + blockSize * 0.6 * pos, startY, blockSize * 0.6, blockSize);
     while (score > 0) {
