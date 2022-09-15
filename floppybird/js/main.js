@@ -109,6 +109,10 @@ function InitValue() {
 }
 
 function updateResolution() {
+  if (isMobile) {
+    return;
+  }
+
   let log_msg = isMobile ? "[Mobile]" : "[PC] ";
   log_msg += "S: Start / SPACE, J, ↑: Jump / P: Pause / Jump: " + Math.floor(offset);
   //log_msg += "[" + canvas.width + "x" + canvas.height + "] jump: " + Math.floor(offset);
