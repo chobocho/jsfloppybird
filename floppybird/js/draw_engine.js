@@ -87,22 +87,22 @@ class DrawEngine {
   _drawButton() {
     // printf("[DrawEngine] _drawButton() ", this.game.state());
     if (this.game.isIdleState()) {
-      bufCtx.drawImage(this.buttonImage['start'], 250, 100, 300, 163);
+      bufCtx.drawImage(this.buttonImage['start'], 250-(250-95), 100, 300*0.7, 163*0.7);
       this._drawHighScore();
     } else if (this.game.isPauseState()) {
-      bufCtx.drawImage(this.buttonImage['resume'], 300, 100, 200, 100);
+      bufCtx.drawImage(this.buttonImage['resume'], 300-200, 100, 200, 100);
       this._drawHighScore();
     }  else if (this.game.isGameOverState()) {
-      bufCtx.drawImage(this.buttonImage['start'], 250, 100, 300, 163);
+      bufCtx.drawImage(this.buttonImage['start'], 250-(250-95), 100, 300*0.7, 163*0.7);
       this._drawHighScore();
     }  else if (this.game.isPlayState()) {
-      bufCtx.drawImage(this.buttonImage['pause'], 710, 510, 80, 80);
+      bufCtx.drawImage(this.buttonImage['pause'], 710-400, 510, 80, 80);
     }
   }
 
   _drawBird() {
     this._tick++;
-    let birdFrame = Math.floor(this._tick / 5);
+    let birdFrame = Math.floor(this._tick / 12);
     if (birdFrame > 3) {
       birdFrame = 3;
       this._tick = 0;
@@ -126,7 +126,7 @@ class DrawEngine {
       let p = pillar[i];
       let x = p[0];
 
-      if (x > 800) {
+      if (x > 800-400) {
         continue;
       }
 
@@ -155,7 +155,7 @@ class DrawEngine {
     // printf("[DrawEngine] _drawScore()", this.game.score());
     let energy = Math.floor(this.game.energy() * 2);
     let blockSize = 30;
-    let startX = 790-204;
+    let startX = 790-204-400;
     let startY = 10;
 
     bufCtx.drawImage(this.buttonImage['bar'], startX, startY, 204, blockSize);
@@ -171,7 +171,7 @@ class DrawEngine {
     let score = this.game.score();
     let pos = 7;
     let blockSize = 30;
-    let startX = 770-(blockSize*0.6*pos);
+    let startX = 770-(blockSize*0.6*pos)-400;
     let startY = 10;
 
     bufCtx.drawImage(this.buttonImage[code[score%10]], startX + blockSize * 0.6 * pos, startY, blockSize * 0.6, blockSize);
@@ -187,8 +187,9 @@ class DrawEngine {
     let code = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     let highScore = this.game.highScore();
     let pos = 8;
-    let blockSize = 60;
-    let startX = (780-blockSize*pos)/2;
+    let blockSize = 40;
+    //let startX = (780-blockSize*pos)/2;
+    let startX = (400-blockSize*pos)/2;
     let startY = 300;
 
     bufCtx.fillStyle = '#FFFF0022';
@@ -214,19 +215,22 @@ class DrawEngine {
   getEventCode(x, y) {
     printf("[DrawEngine] getEventCode() ", this.game.state() + " (" + x + ", " + y + ")");
     if (this.game.isIdleState()) {
-      if (x > 250 && x < 250+300 && y > 100 && y < 100+163) {
+      // if (x > 250 && x < 250+300 && y > 100 && y < 100+163) {
+      if (x > 95 && x < 95+210 && y > 100 && y < 100+163*0.7) {
         return S_KEY;
       }
     } else if (this.game.isPauseState()) {
-      if (x > 300 && x < 300+200 && y > 100 && y < 100+100) {
+      // if (x > 300 && x < 300+200 && y > 100 && y < 100+100) {
+      if (x > 100 && x < 300 && y > 100 && y < 100+100) {
         return S_KEY;
       }
     }  else if (this.game.isGameOverState()) {
-      if (x > 250 && x < 250+300 && y > 100 && y < 100+163) {
+      // if (x > 250 && x < 250+300 && y > 100 && y < 100+163) {
+      if (x > 95 && x < 95+210 && y > 100 && y < 100+163*0.7) {
         return S_KEY;
       }
     }  else if (this.game.isPlayState()) {
-      if (x > 710 && x < 710+80 && y > 510 && y < 510+80) {
+      if (x > 710-400 && x < 710+80-400 && y > 510 && y < 510+80) {
         return P_KEY;
       }
       return SPACE_KEY;

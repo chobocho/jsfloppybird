@@ -15,6 +15,7 @@ class FloppyBird {
     this._startY = startY;
     this._x = startX;
     this._y = startY;
+    this._jump = 0;
     this._level = 1;
     this._tick = 0;
     this._space_click_count = 0;
@@ -32,6 +33,7 @@ class FloppyBird {
     this._space_click_count = 0;
     this._x = this._startX;
     this._y = this._startY;
+    this._jump = 0;
     this._shield.init();
     this._score.init();
     this._pillar.init();
@@ -48,6 +50,9 @@ class FloppyBird {
     if (this._state !== this.PLAY_STATE) {
       return;
     }
+    if (this._jump > 1) {
+      return;
+    }
     this._y += this.GRAVITY + acceleration;
     this._y = this._y < this._bottom ? this._y : this._bottom;
   }
@@ -57,14 +62,33 @@ class FloppyBird {
       return;
     }
 
-    offset = this.JUMP + acceleration;
-    this._y -= offset;
-    this._y = this._y > 0 ? this._y : 0;
+    let _offset = this.JUMP + acceleration;
+    this._jump += _offset;
+
+    offset = this._jump;
+
     this._space_click_count++;
     if (this._space_click_count > 2) {
       this._energy.decrease(1);
       this._space_click_count = 0;
     }
+  }
+
+  // For the animation of Bird
+  jump() {
+    if (this._state !== this.PLAY_STATE) {
+      return;
+    }
+    if (this._jump > 1) {
+      this._y -= Math.floor(this._jump * 0.08);
+      if (this._y < 0) {
+        this._y = 0;
+      }
+      this._jump = Math.floor(this._jump * 0.92);
+    } else {
+      this._jump = 0;
+    }
+    offset = this._jump;
   }
 
   moveRight(acceleration) {

@@ -17,7 +17,7 @@ class GameEngine{
 
     let score = this._start_score + this.game.score();
     let acceleration = score > this._reference_score ? (score - this._reference_score) / 10000 : 0;
-    this.moveRight(acceleration);
+    this.moveRight(acceleration * 0.7);
     this.moveDown(acceleration);
     this.game.checkGetItem();
     this.game.isAlive();

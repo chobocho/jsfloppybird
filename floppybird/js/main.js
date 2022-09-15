@@ -1,4 +1,5 @@
 function OnDraw() {
+  floppybird.jump();
   gameEngine.increaseTick();
   drawEngine.OnDraw();
   updateResolution();
@@ -146,7 +147,7 @@ const isMobileOS = () => {
 const onLoadPage = function onLoadPageFnc() {
   InitCanvas();
   InitValue();
-  setInterval(OnDraw, 30);
+  setInterval(OnDraw, 20);
   //setTimeout(function () { OnDraw() }, 300);
   isMobile = isMobileOS();
 }
