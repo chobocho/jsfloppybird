@@ -68,6 +68,7 @@ class Item {
     }
 
     removeFirstItem() {
-        this._items[0][0] = -1;
+        this._items[0][0] = -100;
+        this._items[0][2] = this.ITEM_NONE;
     }
 }

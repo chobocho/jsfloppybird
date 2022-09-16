@@ -1,5 +1,4 @@
 function OnDraw() {
-  floppybird.jump();
   gameEngine.increaseTick();
   drawEngine.OnDraw();
   updateResolution();
@@ -116,7 +115,7 @@ function updateResolution() {
   let log_msg = isMobile ? "[Mobile]" : "[PC] ";
   log_msg += "S: Start / SPACE, J, ↑: Jump / P: Pause / Jump: " + Math.floor(offset);
   //log_msg += "[" + canvas.width + "x" + canvas.height + "] jump: " + Math.floor(offset);
-  printf("[main] bufCtx", log_msg);
+  //printf("[main] bufCtx", log_msg);
   document.getElementById("message").innerHTML = log_msg;
 }
 
@@ -124,7 +123,7 @@ function updateResolution() {
 function InitCanvas() {
   canvas = document.getElementById("canvas");
   let log_msg = "Width: " + canvas.width + " Height: " + canvas.height;
-  printf("[main]", log_msg);
+  //printf("[main]", log_msg);
   // canvas.width = 800;
   // canvas.height = 600;
   cvs = canvas.getContext("2d");

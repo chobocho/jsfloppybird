@@ -140,7 +140,7 @@ class DrawEngine {
       }
       bufCtx.drawImage(this.buttonImage['tile_down'], x, 540 - p[2]*60, 60, 60);
 
-      if (item[i][0] > 0) {
+      if (item[i][0] > -60) {
         let itemName = ['coin', 'coin', 'red_bottle', 'pink_bottle', 'shield'];
         if (item[i][2] > 1) {
           bufCtx.drawImage(this.buttonImage[itemName[item[i][2]]], item[i][0], item[i][1] * 60, 60, 51);
@@ -213,7 +213,7 @@ class DrawEngine {
   }
 
   getEventCode(x, y) {
-    printf("[DrawEngine] getEventCode() ", this.game.state() + " (" + x + ", " + y + ")");
+    // printf("[DrawEngine] getEventCode() ", this.game.state() + " (" + x + ", " + y + ")");
     if (this.game.isIdleState()) {
       // if (x > 250 && x < 250+300 && y > 100 && y < 100+163) {
       if (x > 95 && x < 95+210 && y > 100 && y < 100+163*0.7) {

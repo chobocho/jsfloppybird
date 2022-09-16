@@ -209,6 +209,19 @@ class FloppyBird {
     return this._y + this.core_rect[3] >= y;
   }
 
+  isCollision(x1, y1, x2, y2) {
+     // bird 60x51
+     // item 60x51 or 60x60
+     if (this._x + this.core_rect[2] < x1+10)
+       return false;
+     if (this._x + this.core_rect[0] > x2-10)
+       return false;
+     if (this._y + this.core_rect[3] < y1+10)
+       return false;
+     return !(this._y + this.core_rect[1] > y2-10)
+  }
+
+
   isAlive() {
     if (this._state !== this.PLAY_STATE) {
       return false;
@@ -248,23 +261,34 @@ class FloppyBird {
 
   checkGetItem() {
     let item = this._items.item();
-    let itemType = item[0][2];
-    printf("[Floppybird] ", "Get Items " + itemType);
+    let collision = false;
 
-    if (this.upCollision(item[0][0], item[0][0] + 60, item[0][1] * 60)
-        || this.downCollision(item[0][0], item[0][0] + 60, item[0][1] * 60 + 60)) {
-      this._items.removeFirstItem();
-      let scoreTable = [0, 512, 1024, 2048, 3072];
-      // None, Coin, RED, PINK, SHIELD
-      let energyTable = [0, 3, 12, 32, 100];
-      this._score.increase(scoreTable[itemType]);
-      this._energy.increase(energyTable[itemType]);
-
-      if (itemType === this._items.ITEM_SHIELD) {
-        this.startShield();
+    for (let i = 0; i < item.length; i++) {
+      let itemType = item[i][2];
+      if (itemType === this._items.ITEM_NONE || item[i][0] < 0 || item[i][0] > 400) {
+        continue;
       }
 
-      printf("[Floppybird] ", "Get Items:" + itemType);
+      printf("[Floppybird] ", "Get Items " + itemType);
+
+      if (this.isCollision(item[i][0], item[i][1] * 60, item[i][0] + 60, item[i][1] * 60 + 51)) {
+        let scoreTable = [0, 512, 1024, 2048, 3072];
+        // None, Coin, RED, PINK, SHIELD
+        let energyTable = [0, 3, 12, 32, 100];
+        this._score.increase(scoreTable[itemType]);
+        this._energy.increase(energyTable[itemType]);
+
+        if (itemType === this._items.ITEM_SHIELD) {
+          this.startShield();
+        }
+
+        collision = true;
+        printf("[Floppybird] ", i + ":" + "Get Items:" + itemType);
+        break;
+      }
+    }
+    if (collision) {
+      this._items.removeFirstItem();
     }
   }
 
