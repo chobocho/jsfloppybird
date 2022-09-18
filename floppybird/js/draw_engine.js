@@ -96,7 +96,7 @@ class DrawEngine {
       bufCtx.drawImage(this.buttonImage['start'], 250-(250-95), 100, 300*0.7, 163*0.7);
       this._drawHighScore();
     }  else if (this.game.isPlayState()) {
-      bufCtx.drawImage(this.buttonImage['pause'], 710-400, 510, 80, 80);
+      bufCtx.drawImage(this.buttonImage['pause'], 10, 10, 60, 60);
     }
   }
 
@@ -230,7 +230,8 @@ class DrawEngine {
         return S_KEY;
       }
     }  else if (this.game.isPlayState()) {
-      if (x > 710-400 && x < 710+80-400 && y > 510 && y < 510+80) {
+      //if (x > 710-400 && x < 710+80-400 && y > 510 && y < 510+80) {
+      if (x > 10 && x < 70 && y > 10 && y < 70) {
         return P_KEY;
       }
       return SPACE_KEY;
