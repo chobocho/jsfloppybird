@@ -1,7 +1,8 @@
 class Pillar {
-    constructor(items) {
+    constructor(items, startX=0) {
         this._pillars = [];
         this._items = items;
+        this.startX = startX-60;
     }
 
     init() {
@@ -11,19 +12,19 @@ class Pillar {
         for (let i = 0; i < 4; ++i) {
             let down = getRandomInt(0, 5);
             let top = getRandomInt(0, 5 - down);
-            this._pillars.push([400 + i * 200, top, down])
-            this._items.make_new_item(400 + i * 200, top, down);
+            this._pillars.push([gBufferX + i * 200, top, down])
+            this._items.make_new_item(gBufferX + i * 200, top, down);
         }
     }
 
     move(speed = 1) {
-        printf("[Pillar] ", "Speed:" + speed);
+        // printf("[Pillar] ", "Speed:" + speed);
 
         for (let i = 0; i < this._pillars.length; i++) {
             this._pillars[i][0] -= speed;
         }
 
-        if (this._pillars[0][0] < -60) {
+        if (this._pillars[0][0] < this.startX) {
             this._make_new_pillar(speed);
         }
     }

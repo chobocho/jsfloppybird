@@ -23,7 +23,7 @@ class Item {
     }
 
     move(speed = 1) {
-        printf("[Item] ", "Speed:" + speed);
+        // printf("[Item] ", "Speed:" + speed);
 
         for (let i = 0; i < this._items.length; i++) {
             this._items[i][0] -= speed;
@@ -70,5 +70,14 @@ class Item {
     removeFirstItem() {
         this._items[0][0] = -100;
         this._items[0][2] = this.ITEM_NONE;
+    }
+
+    removeItem(idx) {
+        this._items[idx][0] = -100;
+        this._items[idx][2] = this.ITEM_NONE;
+    }
+
+    setGame(game) {
+        this.game = game;
     }
 }

@@ -1,5 +1,6 @@
-class Energy {
+class Energy extends Observer {
     constructor(game) {
+        super();
         this._energy = 100;
         this.game = game;
     }
@@ -16,7 +17,7 @@ class Energy {
         this._energy += value;
         if (this._energy > 100) {
             if (this._energy > 108) {
-                this.game.startShield();
+                this.notify();
             }
             this._energy = 100;
         }
@@ -25,5 +26,9 @@ class Energy {
     decrease(value) {
         this._energy -= value;
         this._energy = this._energy < 0 ? 0 : this._energy;
+    }
+
+    notify() {
+        super.notify("SHIELD");
     }
 }

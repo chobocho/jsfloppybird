@@ -1,5 +1,5 @@
 class FloppyBird {
-  constructor(startX, startY, highscore=0) {
+  constructor(startX, startY, score, energy, item, pillar) {
     this.IDLE_STATE = 0;
     this.PLAY_STATE = 1;
     this.PAUSE_STATE = 2;
@@ -20,10 +20,10 @@ class FloppyBird {
     this._tick = 0;
     this._space_click_count = 0;
     this._shield = new Shield();
-    this._score = new Score(highscore);
-    this._energy = new Energy(this);
-    this._items = new Item(this);
-    this._pillar = new Pillar(this._items);
+    this._score = score;
+    this._energy = energy;
+    this._items = item;
+    this._pillar = pillar;
     this._state = this.IDLE_STATE;
     this._isPlayMusic = true;
     this._coin_audio = new Audio("data:audio/mp3;base64," + coin_sound);
@@ -185,6 +185,10 @@ class FloppyBird {
     return this._state === this.GAME_OVER_STATE;
   }
 
+  setGameOverState() {
+    this._state = this.GAME_OVER_STATE;
+  }
+
   energy() {
     return this._energy.energy();
   }
@@ -225,7 +229,6 @@ class FloppyBird {
      return !(this._y + this.core_rect[1] > y2-10)
   }
 
-
   isAlive() {
     if (this._state !== this.PLAY_STATE) {
       return false;
@@ -238,7 +241,7 @@ class FloppyBird {
       return false;
     }
 
-    printf("[FloppyBird] isAlive()", this._x + ", " + this._y + this.core_rect[3]);
+    // printf("[FloppyBird] isAlive()", this._x + ", " + this._y + this.core_rect[3]);
     if (this._y + this.core_rect[3] > this._bottom) {
       this._state = this.GAME_OVER_STATE;
       if (this._isPlayMusic) {
@@ -272,13 +275,20 @@ class FloppyBird {
     this._shield.start();
   }
 
+  notify(event) {
+    if (event === "SHIELD") {
+      this.startShield();
+    }
+  }
+
   checkGetItem() {
     let item = this._items.item();
     let collision = false;
+    let idx = 0;
 
     for (let i = 0; i < item.length; i++) {
       let itemType = item[i][2];
-      if (itemType === this._items.ITEM_NONE || item[i][0] < 0 || item[i][0] > 400) {
+      if (itemType === this._items.ITEM_NONE || item[i][0] < 0 || item[i][0] > 800) {
         continue;
       }
 
@@ -302,12 +312,13 @@ class FloppyBird {
         }
 
         collision = true;
+        idx = i;
         printf("[Floppybird] ", i + ":" + "Get Items:" + itemType);
         break;
       }
     }
     if (collision) {
-      this._items.removeFirstItem();
+      this._items.removeItem(idx);
     }
   }
 
@@ -330,7 +341,6 @@ class FloppyBird {
       this._item_audio.play();
     }
   }
-
 
   needToSaveScore() {
     return this._score.needToSave();
